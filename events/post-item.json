@@ -1,0 +1,4 @@
+{
+  "httpMethod": "POST",
+  "body": "{\"to\":\"+15551234567\",\"contents\":\"Hello, SMS world!\",\"messageType\":\"TRANSACTIONAL\" }"
+}
