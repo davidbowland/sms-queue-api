@@ -11,14 +11,14 @@ env:
   PIPELINE_USER_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   SAM_TEMPLATE: template.yaml
   TESTING_STACK_NAME: sms-queue-api-test
-  TESTING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-sam-cli-managed-sms-queu-PipelineExecutionRole-12UCU2R5CLVEG
-  TESTING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-sam-cli-managed-sms-q-CloudFormationExecutionR-1G18VBAHID89D
-  TESTING_ARTIFACTS_BUCKET: aws-sam-cli-managed-sms-queue-api-artifactsbucket-wcjhz27amg5c
+  TESTING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/dbowland-pipeline-test
+  TESTING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/dbowland-cloudformation-test
+  TESTING_ARTIFACTS_BUCKET: dbowland-lambda-east-1-test
   TESTING_REGION: ${{ secrets.AWS_REGION }}
   PROD_STACK_NAME: sms-queue-api
-  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-sam-cli-managed-sms-queu-PipelineExecutionRole-33TZ4I64BUA3
-  PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-sam-cli-managed-sms-q-CloudFormationExecutionR-CBL9GSM29LS7
-  PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-sms-queue-api-artifactsbucket-dfmdaxfla4jf
+  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/dbowland-pipeline
+  PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/dbowland-cloudformation
+  PROD_ARTIFACTS_BUCKET: dbowland-lambda-east-1
   PROD_REGION: ${{ secrets.AWS_REGION }}
 
 jobs:
@@ -44,8 +44,6 @@ jobs:
 
   build-and-deploy-feature:
     name: Deploy feature branch
-    # this stage is triggered only for feature branches (feature*),
-    # which will build the stack and deploy to a stack named with branch name.
     if: startsWith(github.ref, 'refs/heads/feature')
     needs: [test]
     runs-on: ubuntu-latest
@@ -86,6 +84,7 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region ${TESTING_REGION} \
             --s3-bucket ${TESTING_ARTIFACTS_BUCKET} \
+            --s3-prefix sms-queue-api-test \
             --no-fail-on-empty-changeset \
             --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE} \
             --parameter-overrides 'AccountId=${{ secrets.AWS_ACCOUNT_ID }} Environment=test'
@@ -131,6 +130,7 @@ jobs:
         run: |
           sam package \
             --s3-bucket ${TESTING_ARTIFACTS_BUCKET} \
+            --s3-prefix sms-queue-api-test \
             --region ${TESTING_REGION} \
             --output-template-file packaged-testing.yaml
 
@@ -154,6 +154,7 @@ jobs:
         run: |
           sam package \
             --s3-bucket ${PROD_ARTIFACTS_BUCKET} \
+            --s3-prefix sms-queue-api \
             --region ${PROD_REGION} \
             --output-template-file packaged-prod.yaml
 
@@ -196,6 +197,7 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region ${TESTING_REGION} \
             --s3-bucket ${TESTING_ARTIFACTS_BUCKET} \
+            --s3-prefix sms-queue-api-test \
             --no-fail-on-empty-changeset \
             --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE} \
             --parameter-overrides 'AccountId=${{ secrets.AWS_ACCOUNT_ID }} Environment=test'
@@ -234,6 +236,7 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region ${PROD_REGION} \
             --s3-bucket ${PROD_ARTIFACTS_BUCKET} \
+            --s3-prefix sms-queue-api \
             --no-fail-on-empty-changeset \
             --role-arn ${PROD_CLOUDFORMATION_EXECUTION_ROLE}\
             --parameter-overrides 'AccountId=${{ secrets.AWS_ACCOUNT_ID }}'
