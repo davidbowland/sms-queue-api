@@ -17,9 +17,9 @@ const processEmail = async (message: SMSMessage): Promise<APIGatewayProxyResult>
 export const postItem = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   log('Received event', { ...event, body: undefined })
   try {
-    const email = await extractMessageFromEvent(event)
+    const email = extractMessageFromEvent(event)
     return await processEmail(email)
   } catch (error) {
-    return { ...status.BAD_REQUEST, body: JSON.stringify({ message: error }) }
+    return { ...status.BAD_REQUEST, body: JSON.stringify({ message: error.message }) }
   }
 }

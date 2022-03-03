@@ -17,7 +17,7 @@ describe('post-item', () => {
   const event = eventJson as unknown as APIGatewayEvent
 
   beforeAll(() => {
-    mocked(events).extractMessageFromEvent.mockResolvedValue(message)
+    mocked(events).extractMessageFromEvent.mockReturnValue(message)
     mocked(sqs).addToQueue.mockResolvedValue(undefined)
   })
 
@@ -28,9 +28,11 @@ describe('post-item', () => {
     })
 
     test('expect BAD_REQUEST when extractMessageFromEvent throws', async () => {
-      mocked(events).extractMessageFromEvent.mockRejectedValueOnce(undefined)
+      mocked(events).extractMessageFromEvent.mockImplementationOnce(() => {
+        throw new Error('Bad request')
+      })
       const result = await postItem(event)
-      expect(result).toEqual({ ...status.BAD_REQUEST, body: '{}' })
+      expect(result).toEqual(status.BAD_REQUEST)
     })
 
     test('expect message added to queue', async () => {
