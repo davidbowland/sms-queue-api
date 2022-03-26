@@ -1,12 +1,13 @@
 import { mocked } from 'jest-mock'
 
-import { message } from '../__mocks__'
-import eventJson from '@events/post-item.json'
-import { postItem } from '@handlers/post-item'
-import * as sqs from '@services/sqs'
-import { APIGatewayEvent } from '@types'
 import * as events from '@utils/events'
 import * as logging from '@utils/logging'
+import * as sqs from '@services/sqs'
+import { APIGatewayEvent } from '@types'
+import eventJson from '@events/post-item.json'
+import { message } from '../__mocks__'
+import { postItem } from '@handlers/post-item'
+
 import status from '@utils/status'
 
 jest.mock('@services/sqs')

@@ -1,7 +1,7 @@
-import { addToQueue } from '../services/sqs'
 import { APIGatewayEvent, APIGatewayProxyResult, SMSMessage } from '../types'
-import { extractMessageFromEvent } from '../utils/events'
 import { log, logError } from '../utils/logging'
+import { addToQueue } from '../services/sqs'
+import { extractMessageFromEvent } from '../utils/events'
 import status from '../utils/status'
 
 const processEmail = async (message: SMSMessage): Promise<APIGatewayProxyResult> => {

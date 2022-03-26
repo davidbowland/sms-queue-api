@@ -1,5 +1,5 @@
-import { message } from '../__mocks__'
 import { addToQueue } from '@services/sqs'
+import { message } from '../__mocks__'
 
 const mockSendMessage = jest.fn()
 jest.mock('aws-sdk', () => ({
@@ -17,7 +17,7 @@ describe('sqs', () => {
     test('expect message to be added to queue', async () => {
       await addToQueue(message)
       expect(mockSendMessage).toHaveBeenCalledWith({
-        MessageBody: '{"to":"+15551234567","contents":"Hello, SMS world!","messageType":"TRANSACTIONAL"}',
+        MessageBody: '{"contents":"Hello, SMS world!","messageType":"TRANSACTIONAL","to":"+15551234567"}',
         MessageGroupId: 'message-queue-id',
         QueueUrl: 'https://dbowland.com/sqsQueue',
       })

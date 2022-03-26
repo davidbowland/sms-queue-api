@@ -1,7 +1,7 @@
-import { message } from '../__mocks__'
-import eventJson from '@events/post-item.json'
 import { APIGatewayEvent } from '@types'
+import eventJson from '@events/post-item.json'
 import { extractMessageFromEvent } from '@utils/events'
+import { message } from '../__mocks__'
 
 describe('event', () => {
   const event = eventJson as unknown as APIGatewayEvent
@@ -28,8 +28,8 @@ describe('event', () => {
     test('expect formatted message from event when base64', () => {
       const tempEvent = {
         ...event,
-        isBase64Encoded: true,
         body: Buffer.from(JSON.stringify(message)).toString('base64'),
+        isBase64Encoded: true,
       } as unknown as APIGatewayEvent
       const result = extractMessageFromEvent(tempEvent)
       expect(result).toEqual({

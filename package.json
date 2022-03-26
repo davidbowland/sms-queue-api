@@ -14,7 +14,7 @@
     "prepare": "if [ \"$HUSKY\" != \"0\" ]; then husky install ; fi",
     "start": "npm run build && npm run quick-start",
     "quick-start": "tsc && HUSKY=0 sam build && SQS_MESSAGE_QUEUE_ID=sms SQS_QUEUE_URL=https://sqs.us-east-1.amazonaws.com/$AWS_ACCOUNT_ID/sms-queue-service-test-SimpleQueue-zO4CTBnv6cwy.fifo sam local start-api --region us-east-1",
-    "test": "npm run lint && jest --colors"
+    "test": "jest --colors"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [

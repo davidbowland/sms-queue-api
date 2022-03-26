@@ -4,18 +4,18 @@ import { APIGatewayEvent, SMSMessage } from '../types'
 
 const formatEmail = (message: SMSMessage): SMSMessage => {
   if (!message.to) {
-    throw new Error('Missing to value')
+    throw new Error('to missing from request')
   } else if (message.to.match(/^\+1\d{10}$/) === null) {
-    throw new Error('To value must be in the format +10000000000')
+    throw new Error('to must be in the format +10000000000')
   } else if (!message.contents) {
-    throw new Error('Missing contents value')
+    throw new Error('contents missing from request')
   } else if (message.messageType && ['TRANSACTIONAL', 'PROMOTIONAL'].every((item) => message.messageType != item)) {
-    throw new Error('Message type must be either TRANSACTIONAL or PROMOTIONAL when present')
+    throw new Error('type must be either TRANSACTIONAL or PROMOTIONAL when present')
   }
   return {
-    to: message.to,
     contents: message.contents,
     messageType: message.messageType,
+    to: message.to,
   }
 }
 
