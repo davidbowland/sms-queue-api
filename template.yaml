@@ -80,6 +80,10 @@ Resources:
             Method: post
             Auth:
               ApiKeyRequired: true
+      Tags:
+        'created-by': 'sms-queue-api'
+        'created-for': 'dbowland'
+        'environment': !Ref Environment
 
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
@@ -87,3 +91,10 @@ Resources:
     Properties:
       LogGroupName: !Sub /aws/lambda/${PostItemFunction}
       RetentionInDays: 30
+      Tags:
+        - Key: 'created-by'
+          Value: 'sms-queue-api'
+        - Key: 'created-for'
+          Value: 'dbowland'
+        - Key: 'environment'
+          Value: !Ref Environment
