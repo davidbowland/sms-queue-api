@@ -57,7 +57,6 @@ Resources:
       Architectures:
         - x86_64
       MemorySize: 128
-      Timeout: 30
       Description: Adds sms messages to the queue to be sent.
       Policies:
         # Give Lambda basic execution Permission
@@ -84,6 +83,8 @@ Resources:
         'created-by': 'sms-queue-api'
         'created-for': 'dbowland'
         'environment': !Ref Environment
+      Timeout: 30
+      Tracing: Active
 
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup

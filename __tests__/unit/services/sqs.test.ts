@@ -7,6 +7,9 @@ jest.mock('aws-sdk', () => ({
     sendMessage: (...args) => ({ promise: () => mockSendMessage(...args) }),
   })),
 }))
+jest.mock('@utils/logging', () => ({
+  xrayCapture: jest.fn().mockImplementation((x) => x),
+}))
 
 describe('sqs', () => {
   describe('addToQueue', () => {
