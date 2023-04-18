@@ -2,7 +2,7 @@
   "name": "sms-queue-api",
   "author": "David Bowland",
   "description": "Queues SMS messages in SQS to be sent by sms-queue-service",
-  "version": "1.27.0",
+  "version": "1.28.0",
   "engines": {
     "node": "^18.0.0"
   },
