@@ -18,6 +18,7 @@ describe('event', () => {
 
     test('expect formatted message from event', () => {
       const result = extractMessageFromEvent(event)
+
       expect(result).toEqual({
         contents: 'Hello, SMS world!',
         messageType: 'TRANSACTIONAL',
@@ -32,6 +33,7 @@ describe('event', () => {
         isBase64Encoded: true,
       } as unknown as APIGatewayEvent
       const result = extractMessageFromEvent(tempEvent)
+
       expect(result).toEqual({
         contents: 'Hello, SMS world!',
         messageType: 'TRANSACTIONAL',
@@ -43,6 +45,7 @@ describe('event', () => {
       const tempMessage = { ...message, messageType: undefined }
       const tempEvent = { ...event, body: JSON.stringify(tempMessage) } as unknown as APIGatewayEvent
       const result = extractMessageFromEvent(tempEvent)
+
       expect(result).toEqual({
         contents: 'Hello, SMS world!',
         messageType: undefined,

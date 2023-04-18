@@ -25,6 +25,7 @@ describe('post-item', () => {
   describe('postItem', () => {
     test('expect event object logged without body', async () => {
       await postItem(event)
+
       expect(mocked(logging).log).toHaveBeenCalledWith(expect.anything(), { ...event, body: undefined })
     })
 
@@ -33,22 +34,26 @@ describe('post-item', () => {
         throw new Error('Bad request')
       })
       const result = await postItem(event)
+
       expect(result).toEqual(status.BAD_REQUEST)
     })
 
     test('expect message added to queue', async () => {
       await postItem(event)
+
       expect(mocked(sqs).addToQueue).toHaveBeenCalledWith(message)
     })
 
     test('expect INTERNAL_SERVER_ERROR when queue error', async () => {
       mocked(sqs).addToQueue.mockRejectedValueOnce(undefined)
       const result = await postItem(event)
+
       expect(result).toEqual(expect.objectContaining(status.INTERNAL_SERVER_ERROR))
     })
 
     test('expect NO_CONTENT when success', async () => {
       const result = await postItem(event)
+
       expect(result).toEqual(expect.objectContaining(status.NO_CONTENT))
     })
   })
