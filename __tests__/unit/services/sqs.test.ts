@@ -1,5 +1,5 @@
-import { addToQueue } from '@services/sqs'
 import { message } from '../__mocks__'
+import { addToQueue } from '@services/sqs'
 
 const mockSend = jest.fn()
 jest.mock('@aws-sdk/client-sqs', () => ({
@@ -18,7 +18,7 @@ describe('sqs', () => {
       mockSend.mockResolvedValue(undefined)
     })
 
-    test('expect message to be added to queue', async () => {
+    it('should add message to queue', async () => {
       await addToQueue(message)
 
       expect(mockSend).toHaveBeenCalledWith({

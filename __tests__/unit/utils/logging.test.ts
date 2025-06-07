@@ -1,7 +1,8 @@
-import * as AWSXRay from 'aws-xray-sdk-core'
-import { log, logError, xrayCapture } from '@utils/logging'
-import { mocked } from 'jest-mock'
 import { SQSClient } from '@aws-sdk/client-sqs'
+import * as AWSXRay from 'aws-xray-sdk-core'
+import { mocked } from 'jest-mock'
+
+import { log, logError, xrayCapture } from '@utils/logging'
 
 jest.mock('aws-xray-sdk-core')
 
@@ -12,27 +13,27 @@ describe('logging', () => {
   })
 
   describe('log', () => {
-    test.each(['Hello', 0, null, undefined, { a: 1, b: 2 }])(
-      'expect logFunc to have been called with message',
+    it.each(['Hello', 0, null, undefined, { a: 1, b: 2 }])(
+      'should call console.log with message for %p',
       async (value) => {
         const message = `Log message for value ${JSON.stringify(value)}`
         await log(message)
 
         expect(console.log).toHaveBeenCalledWith(message)
-      }
+      },
     )
   })
 
   describe('logError', () => {
-    test.each(['Hello', 0, null, undefined, { a: 1, b: 2 }])(
-      'expect logFunc to have been called with message',
+    it.each(['Hello', 0, null, undefined, { a: 1, b: 2 }])(
+      'should call console.error with error for %p',
       async (value) => {
         const message = `Error message for value ${JSON.stringify(value)}`
         const error = new Error(message)
         await logError(error)
 
         expect(console.error).toHaveBeenCalledWith(error)
-      }
+      },
     )
   })
 
@@ -44,7 +45,7 @@ describe('logging', () => {
       mocked(AWSXRay).captureAWSv3Client.mockReturnValue(capturedSqs)
     })
 
-    test('expect AWSXRay.captureAWSv3Client when x-ray is enabled (not running locally)', () => {
+    it('should use AWSXRay.captureAWSv3Client when x-ray is enabled', () => {
       process.env.AWS_SAM_LOCAL = 'false'
       const result = xrayCapture(sqs)
 
@@ -52,7 +53,7 @@ describe('logging', () => {
       expect(result).toEqual(capturedSqs)
     })
 
-    test('expect same object when x-ray is disabled (running locally)', () => {
+    it('should return same object when running locally', () => {
       process.env.AWS_SAM_LOCAL = 'true'
       const result = xrayCapture(sqs)
 

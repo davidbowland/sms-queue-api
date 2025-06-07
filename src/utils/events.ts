@@ -2,7 +2,7 @@ import { APIGatewayEvent, SMSMessage } from '../types'
 
 /* SMSMessage */
 
-const formatEmail = (message: SMSMessage): SMSMessage => {
+const formatSMS = (message: SMSMessage): SMSMessage => {
   if (!message.to) {
     throw new Error('to missing from request')
   } else if (message.to.match(/^\+1\d{10}$/) === null) {
@@ -23,7 +23,7 @@ const formatEmail = (message: SMSMessage): SMSMessage => {
 
 const parseEventBody = (event: APIGatewayEvent): SMSMessage =>
   JSON.parse(
-    event.isBase64Encoded && event.body ? Buffer.from(event.body, 'base64').toString('utf8') : (event.body as string)
+    event.isBase64Encoded && event.body ? Buffer.from(event.body, 'base64').toString('utf8') : (event.body as string),
   )
 
-export const extractMessageFromEvent = (event: APIGatewayEvent): SMSMessage => formatEmail(parseEventBody(event))
+export const extractMessageFromEvent = (event: APIGatewayEvent): SMSMessage => formatSMS(parseEventBody(event))
