@@ -1,6 +1,5 @@
 import { SQSClient } from '@aws-sdk/client-sqs'
 import * as AWSXRay from 'aws-xray-sdk-core'
-import { mocked } from 'jest-mock'
 
 import { log, logError, xrayCapture } from '@utils/logging'
 
@@ -42,14 +41,14 @@ describe('logging', () => {
     const sqs = 'sqs'
 
     beforeAll(() => {
-      mocked(AWSXRay).captureAWSv3Client.mockReturnValue(capturedSqs)
+      jest.mocked(AWSXRay).captureAWSv3Client.mockReturnValue(capturedSqs)
     })
 
     it('should use AWSXRay.captureAWSv3Client when x-ray is enabled', () => {
       process.env.AWS_SAM_LOCAL = 'false'
       const result = xrayCapture(sqs)
 
-      expect(mocked(AWSXRay).captureAWSv3Client).toHaveBeenCalledWith(sqs)
+      expect(AWSXRay.captureAWSv3Client).toHaveBeenCalledWith(sqs)
       expect(result).toEqual(capturedSqs)
     })
 
@@ -57,7 +56,7 @@ describe('logging', () => {
       process.env.AWS_SAM_LOCAL = 'true'
       const result = xrayCapture(sqs)
 
-      expect(mocked(AWSXRay).captureAWSv3Client).toHaveBeenCalledTimes(0)
+      expect(AWSXRay.captureAWSv3Client).toHaveBeenCalledTimes(0)
       expect(result).toEqual(sqs)
     })
   })

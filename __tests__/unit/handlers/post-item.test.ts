@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { message } from '../__mocks__'
 import eventJson from '@events/post-item.json'
 import { postItem } from '@handlers/post-item'
@@ -17,19 +15,19 @@ describe('post-item', () => {
   const event = eventJson as unknown as APIGatewayEvent
 
   beforeAll(() => {
-    mocked(events).extractMessageFromEvent.mockReturnValue(message)
-    mocked(sqs).addToQueue.mockResolvedValue(undefined)
+    jest.mocked(events).extractMessageFromEvent.mockReturnValue(message)
+    jest.mocked(sqs).addToQueue.mockResolvedValue(undefined)
   })
 
   describe('postItem', () => {
     it('should log event object without body', async () => {
       await postItem(event)
 
-      expect(mocked(logging).log).toHaveBeenCalledWith(expect.anything(), { ...event, body: undefined })
+      expect(logging.log).toHaveBeenCalledWith(expect.anything(), { ...event, body: undefined })
     })
 
     it('should return BAD_REQUEST when extractMessageFromEvent throws', async () => {
-      mocked(events).extractMessageFromEvent.mockImplementationOnce(() => {
+      jest.mocked(events).extractMessageFromEvent.mockImplementationOnce(() => {
         throw new Error('Bad request')
       })
       const result = await postItem(event)
@@ -40,11 +38,11 @@ describe('post-item', () => {
     it('should add message to queue', async () => {
       await postItem(event)
 
-      expect(mocked(sqs).addToQueue).toHaveBeenCalledWith(message)
+      expect(sqs.addToQueue).toHaveBeenCalledWith(message)
     })
 
     it('should return INTERNAL_SERVER_ERROR when queue error occurs', async () => {
-      mocked(sqs).addToQueue.mockRejectedValueOnce(undefined)
+      jest.mocked(sqs).addToQueue.mockRejectedValueOnce(undefined)
       const result = await postItem(event)
 
       expect(result).toEqual(expect.objectContaining(status.INTERNAL_SERVER_ERROR))
