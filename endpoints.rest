@@ -1,0 +1,13 @@
+### Send SMS message
+
+POST https://{{sms-queue-api-host}}/v1/messages HTTP/1.1
+content-type: application/json
+x-api-key: {{sms-queue-api-key}}
+
+{
+  "to": "+15551234567",
+  "contents": "Hello, this is a test SMS message",
+  "messageType": "TRANSACTIONAL"
+}
+
+###
