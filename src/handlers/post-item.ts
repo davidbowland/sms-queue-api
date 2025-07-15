@@ -20,6 +20,6 @@ export const postItem = async (event: APIGatewayEvent): Promise<APIGatewayProxyR
     const sms = extractMessageFromEvent(event)
     return await processSMS(sms)
   } catch (error: unknown) {
-    return { ...status.BAD_REQUEST, body: JSON.stringify({ message: error.message }) }
+    return { ...status.BAD_REQUEST, body: JSON.stringify({ message: (error as Error).message }) }
   }
 }
